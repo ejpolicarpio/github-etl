@@ -1,7 +1,24 @@
 [project]
 name = "github-etl"
 version = "0.1.0"
-description = "Add your description here"
+description = "Extract, Transform, and Load GitHub top repositories with modern approach"
 readme = "README.md"
-requires-python = ">=3.9"
-dependencies = []
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi[standard]>=0.117.1",
+    "loguru>=0.7.3",
+    "pydantic>=2.11.9",
+    "pydantic-settings>=2.5.2",
+    "uvicorn>=0.37.0",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "pytest-asyncio>=0.24.0",
+    "pytest>=8.3.3",
+    "ruff>=0.6.8",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
