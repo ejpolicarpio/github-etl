@@ -11,8 +11,12 @@ class Settings(BaseSettings):
     api_version: str | None = None
     timeout_sec: int | None = None
 
+    PROJECT_NAME: str = "GitHub ETL"
+    BUILD_TAG: str = "dev"
+    BUILD_COMMIT: str = "local"
 
-def get_settings(runtime: FastAPI = None, new=False) -> Settings:
+
+def get_settings(runtime=None, new=False) -> Settings:
     if new:
         return Settings()
 

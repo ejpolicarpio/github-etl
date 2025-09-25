@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 
 from src.configuration import Settings, get_settings
+from src.endpoints.repositories import router
 
 
 def create_app(settings: Settings = None) -> FastAPI:
@@ -11,12 +12,8 @@ def create_app(settings: Settings = None) -> FastAPI:
         version=f"{settings.BUILD_TAG}-{settings.BUILD_COMMIT}",
     )
 
-    app.settings = settings
-
     # Endpoints
 
-    app.include_router(
-        prefix="",
-    )
+    app.include_router(router, prefix="/api/v1")
 
     return app

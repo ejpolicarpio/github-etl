@@ -2,7 +2,10 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
+
 class RepositoryResponseSchema(BaseModel):
+    model_config = {"extra":"ignore"}
+
     id: int | None = None
     name: str | None = None
     full_name: str | None = None
