@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 
 class RepositoryResponseSchema(BaseModel):
-    model_config = {"extra":"ignore"}
+    model_config = {"extra": "ignore"}
 
     id: int | None = None
     name: str | None = None
