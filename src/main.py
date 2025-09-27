@@ -4,20 +4,21 @@ from contextlib import asynccontextmanager
 
 from src.configuration import Settings, get_settings
 from src.endpoints.repositories import router
-from src.database import Base, db_manager
+from src.database import Base, DatabaseManager
+
 
 def lifespan_provider(settings: Settings) -> Callable:
     @asynccontextmanager
     async def lifespan(app: FastAPI):
-        db_manager.settings = settings
-        await db_manager.initialize()
+        app.db_manager = DatabaseManager(settings)
+        await app.db_manager.initialize()
 
-        async with db_manager.engine.begin() as conn:
+        async with app.db_manager.engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
 
         yield
 
-        await db_manager.close()
+        await app.db_manager.close()
 
     return lifespan
 

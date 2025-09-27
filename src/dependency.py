@@ -1,6 +1,6 @@
 from fastapi import Depends
 from src.configuration import Settings, get_settings as _get_settings
-from src.database import DatabaseManager, db_manager
+from src.database import DatabaseManager
 
 async def get_settings() -> Settings:
     """get application settings"""
@@ -8,12 +8,13 @@ async def get_settings() -> Settings:
 
 async def get_db_manager() -> DatabaseManager:
     """get database manager"""
-    return db_manager
+    settings = await get_settings()
+    return DatabaseManager(settings)
 
 async def get_initialized_db_manager(settings: Settings = Depends(get_settings)):
     """get initialized database manager"""
+    db_manager = DatabaseManager(settings)
     if not db_manager.engine:
-        db_manager.settings = settings
         await db_manager.initialize()
     return db_manager
 

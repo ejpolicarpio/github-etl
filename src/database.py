@@ -9,12 +9,15 @@ class Base(DeclarativeBase):
 
 
 class DatabaseManager:
-    def __init__(self, settings: Settings):
+    def __init__(self, settings: Settings | None = None):
         self.settings = settings
         self.engine = None
         self.async_session = None
 
     def get_database_url(self) -> str:
+        if not self.settings:
+            raise ValueError("Settings not initialized")
+
         return (
             f"postgresql+asyncpg://"
             f"{self.settings.database_username}:{self.settings.database_password}"
@@ -37,4 +40,4 @@ class DatabaseManager:
             await self.engine.dispose()
 
 
-db_manager = DatabaseManger(None)
+db_manager: DatabaseManager | None = None
