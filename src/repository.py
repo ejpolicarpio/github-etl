@@ -48,11 +48,16 @@ class GitHubClient:
                 if existing:
                     for key, value in repo_data.items():
                         if hasattr(existing, key):
+                            if key in ['created_at', 'updated_at'] and isinstance(value, str):
+                                value = datetime.fromisoformat(value.replace('Z', '+00:00')).replace(tzinfo=None)
                             setattr(existing, key, value)
                     existing.fetched_at = datetime.now()
 
                 else:
                     repo_fields = {k: v for k, v in repo_data.items() if hasattr(Repository, k)}
+                    for key in ['created_at', 'updated_at']:
+                        if key in repo_fields and isinstance(repo_fields[key], str):
+                            repo_fields[key] = datetime.fromisoformat(repo_fields[key].replace('Z', '+00:00')).replace(tzinfo=None)
                     repo = Repository(**repo_fields)
                     session.add(repo)
 
