@@ -42,26 +42,35 @@ class GitHubClient:
     async def _save_repository_to_db(self, repo_data: dict):
         try:
             async with self.db_manager.async_session() as session:
-                stmt = select(Repository).where(Repository.full_name == repo_data.get("full_name"))
+                stmt = select(Repository).where(
+                    Repository.full_name == repo_data.get("full_name")
+                )
                 existing = await session.scalar(stmt)
 
                 if existing:
                     for key, value in repo_data.items():
                         if hasattr(existing, key):
-                            if key in ['created_at', 'updated_at'] and isinstance(value, str):
-                                value = datetime.fromisoformat(value.replace('Z', '+00:00')).replace(tzinfo=None)
+                            if key in ["created_at", "updated_at"] and isinstance(
+                                value, str
+                            ):
+                                value = datetime.fromisoformat(
+                                    value.replace("Z", "+00:00")
+                                ).replace(tzinfo=None)
                             setattr(existing, key, value)
                     existing.fetched_at = datetime.now()
 
                 else:
-                    repo_fields = {k: v for k, v in repo_data.items() if hasattr(Repository, k)}
-                    for key in ['created_at', 'updated_at']:
+                    repo_fields = {
+                        k: v for k, v in repo_data.items() if hasattr(Repository, k)
+                    }
+                    for key in ["created_at", "updated_at"]:
                         if key in repo_fields and isinstance(repo_fields[key], str):
-                            repo_fields[key] = datetime.fromisoformat(repo_fields[key].replace('Z', '+00:00')).replace(tzinfo=None)
+                            repo_fields[key] = datetime.fromisoformat(
+                                repo_fields[key].replace("Z", "+00:00")
+                            ).replace(tzinfo=None)
                     repo = Repository(**repo_fields)
                     session.add(repo)
 
                 await session.commit()
         except Exception as e:
             print(f"Error saving repository to database: {e}")
-

@@ -15,7 +15,7 @@ DEFAULT_TAG = "Repositories"
 )
 async def search_repositories(
     query: str = "stars:>1000",
-    settings = Depends(get_settings),
+    settings=Depends(get_settings),
     db_manager=Depends(get_initialized_db_manager),
 ):
     client: GitHubClient = GitHubClient(settings=settings, db_manager=db_manager)

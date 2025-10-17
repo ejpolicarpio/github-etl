@@ -26,7 +26,9 @@ class DatabaseManager:
         )
 
     async def initialize(self):
-        self.engine = create_async_engine(self.get_database_url(), echo=self.settings.database_echo)
+        self.engine = create_async_engine(
+            self.get_database_url(), echo=self.settings.database_echo
+        )
         self.async_session = async_sessionmaker(
             self.engine, class_=AsyncSession, expire_on_commit=False
         )

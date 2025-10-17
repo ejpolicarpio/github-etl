@@ -3,6 +3,7 @@ from sqlalchemy import Integer, String, DateTime, Text
 from sqlalchemy.orm import Mapped, mapped_column
 from src.database import Base
 
+
 class Repository(Base):
     __tablename__ = "repositories"
 
@@ -19,4 +20,6 @@ class Repository(Base):
     language: Mapped[str] = mapped_column(String(50), nullable=True)
 
     # Tracking fields
-    fetched_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=datetime.now)
+    fetched_at: Mapped[datetime] = mapped_column(
+        DateTime, nullable=False, default=datetime.now
+    )
