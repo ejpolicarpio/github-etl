@@ -347,6 +347,7 @@ pytest --cov=app
 pytest tests/test_repositories.py
 ```
 
+
 ## Related Repositories
 
 - **[Infrastructure](../github-etl-infrastructure)** - Kubernetes, Helm, and ArgoCD configurations
