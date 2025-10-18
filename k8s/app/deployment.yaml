@@ -12,11 +12,13 @@ metadata:
       matchLabels:
         app: github-etl
         component: api
-    template:
-      metadata:
-        labels:
-          app: github-etl
-          component: api
+      template:
+        metadata:
+          annotations:
+            instrumentation.opentelemetry.io/inject-python: "true"
+          labels:
+            app: github-etl
+            component: api
       spec:
         containers:
           - name: github-etl
