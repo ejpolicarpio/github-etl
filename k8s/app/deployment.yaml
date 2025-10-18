@@ -1,4 +1,4 @@
-apiVersion: app/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: github-etl-app
@@ -6,62 +6,62 @@ metadata:
   labels:
     app: github-etl
     component: api
-  spec:
-    replicas: 1
-    selector:
-      matchLabels:
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: github-etl
+      component: api
+  template:
+    metadata:
+      annotations:
+        instrumentation.opentelemetry.io/inject-python: "true"
+      labels:
         app: github-etl
         component: api
-      template:
-        metadata:
-          annotations:
-            instrumentation.opentelemetry.io/inject-python: "true"
-          labels:
-            app: github-etl
-            component: api
-      spec:
-        containers:
-          - name: github-etl
-            image: github-etl:latest
-            imagePullPolicy: Never
-            ports:
-              - containerPort: 8000
-                name: http
-            env:
-              - name: DATABASE_USERNAME
-                valueFrom:
-                  configMapKeyRef:
-                    name: github-etl-config
-                    key: database-username
-              - name: DATABASE_PASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    name: github-etl-secrets
-                    key: database-password
-              - name: DATABASE_HOST
-                value: "postgres-service"
-              - name: DATABASE_PORT
-                value: "5432"
-              - name: DATABASE_NAME
-                value: "github_etl_db"
-              - name: DATABASE_ECHO
-                value: "false"
-            livenessProbe:
-              httpGet:
-                path: /docs
-                port: 8000
-              initialDelaySeconds: 30
-              periodSeconds: 10
-            readinessProbe:
-              httpGet:
-                path: /docs
-                port: 8000
-              initialDelaySeconds: 10
-              periodSeconds: 5
-            resources:
-              requests:
-                memory: "256Mi"
-                cpu: "250m"
-              limits:
-                memory: "512Mi"
-                cpu: "500m"
+    spec:
+      containers:
+        - name: github-etl
+          image: github-etl:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8000
+              name: http
+          env:
+            - name: DATABASE_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: github-etl-config
+                  key: database-username
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: github-etl-secrets
+                  key: database-password
+            - name: DATABASE_HOST
+              value: "postgres-service"
+            - name: DATABASE_PORT
+              value: "5432"
+            - name: DATABASE_NAME
+              value: "github_etl_db"
+            - name: DATABASE_ECHO
+              value: "false"
+          livenessProbe:
+            httpGet:
+              path: /docs
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /docs
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
